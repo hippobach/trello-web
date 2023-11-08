@@ -37,7 +37,6 @@ const BoardBar = () => {
         gap: 2,
         paddingX: 2,
         overflowX: 'auto',
-        borderBottom: '1px solid #00bfa5',
         bgcolor: (theme) =>
           theme.palette.mode === 'dark' ? '#34495e' : '#1976d2',
       }}
@@ -97,6 +96,9 @@ const BoardBar = () => {
               height: 32,
               fontSize: 16,
               border: 'none',
+              color: 'white',
+              cursor: 'pointer',
+              '&:first-of-type': { bgcolor: '#a4b0be' },
             },
           }}
         >
