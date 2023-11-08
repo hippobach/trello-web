@@ -4,7 +4,7 @@ import Starred from './Menus/Starred';
 import Profiles from './Menus/Profiles';
 import Templates from './Menus/Templates';
 import Workspaces from './Menus/Workspaces';
-import ModeSelect from '~/components/ModeSelect';
+import ModeSelect from '~/components/ModeSelect/ModeSelect';
 
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
@@ -21,7 +21,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-
 import { ReactComponent as TrelloIcon } from '~/assets/trello.svg';
 
 const AppBar = () => {
