@@ -1,3 +1,5 @@
+import { capitalizeFirstLetter } from '~/utils/formatters';
+
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
@@ -25,7 +27,7 @@ const MENU_STYLE = {
   },
 };
 
-const BoardBar = () => {
+const BoardBar = ({ board }) => {
   return (
     <Box
       sx={{
@@ -45,13 +47,13 @@ const BoardBar = () => {
         <Chip
           sx={MENU_STYLE}
           icon={<DashboardIcon />}
-          label="Hipop Bach"
+          label={board?.title}
           clickable
         />
         <Chip
           sx={MENU_STYLE}
           icon={<VpnLockIcon />}
-          label="Public/Private Workspace"
+          label={capitalizeFirstLetter(board?.type)}
           clickable
         />
         <Chip
