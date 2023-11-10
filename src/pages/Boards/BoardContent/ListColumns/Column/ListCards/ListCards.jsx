@@ -1,7 +1,7 @@
-import Box from '@mui/material/Box';
 import Card from './Card/Card';
+import Box from '@mui/material/Box';
 
-const ListCards = () => {
+const ListCards = ({ cards }) => {
   return (
     <Box
       sx={{
@@ -26,8 +26,9 @@ const ListCards = () => {
         },
       }}
     >
-      <Card />
-      <Card temporaryHideMedia/>
+      {cards?.map((card) => {
+        return <Card key={card._id} card={card} />;
+      })}
     </Box>
   );
 };
