@@ -1,7 +1,10 @@
-import ListCards from './ListCards/ListCards';
 import { mapOrder } from '~/utils/sorts';
+import ListCards from './ListCards/ListCards';
 
 import { useState } from 'react';
+import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable';
+
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import Button from '@mui/material/Button';
@@ -32,8 +35,20 @@ const Column = ({ column }) => {
   };
 
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id');
+
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: column._id, data: { ...column } });
+
+  const dndkitColumnStyles = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+  };
   return (
     <Box
+      ref={setNodeRef}
+      style={dndkitColumnStyles}
+      {...attributes}
+      {...listeners}
       sx={{
         minWidth: '300px',
         maxWidth: '300px',
