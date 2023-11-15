@@ -1,3 +1,5 @@
+import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable';
 import { Card as MuiCard } from '@mui/material';
 import Button from '@mui/material/Button';
 import CardMedia from '@mui/material/CardMedia';
@@ -10,6 +12,21 @@ import AttachmentIcon from '@mui/icons-material/Attachment';
 import ModeCommentIcon from '@mui/icons-material/ModeComment';
 
 const Card = ({ card }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: card._id, data: { ...card } });
+
+  const dndkitCardsStyles = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : undefined,
+  };
+
   const shouldShowCardActions = () => {
     return (
       !!card?.memberIds?.length ||
@@ -19,6 +36,10 @@ const Card = ({ card }) => {
   };
   return (
     <MuiCard
+      ref={setNodeRef}
+      style={dndkitCardsStyles}
+      {...listeners}
+      {...attributes}
       sx={{
         cursor: 'pointer',
         boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
