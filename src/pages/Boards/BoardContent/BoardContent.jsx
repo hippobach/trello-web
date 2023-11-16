@@ -10,9 +10,10 @@ import {
   DragOverlay,
   MouseSensor,
   TouchSensor,
-  defaultDropAnimationSideEffects,
+  closestCorners,
   useSensor,
   useSensors,
+  defaultDropAnimationSideEffects,
 } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
 import Box from '@mui/material/Box';
@@ -205,7 +206,11 @@ const BoardContent = ({ board }) => {
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
+      // cảm biến
       sensors={sensors}
+      // thuật toán phát hiện va chạm (nếu không có nó thì card với cover lớn sẽ không kéo qua column được vì lúc này nó bị conflict giữa card và column)
+      // dùng closestCorners thay vì cloestCenter
+      collisionDetection={closestCorners}
     >
       <Box
         sx={{
