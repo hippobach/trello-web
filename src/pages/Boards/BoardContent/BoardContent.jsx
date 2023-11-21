@@ -2,8 +2,10 @@ import { mapOrder } from '~/utils/sorts';
 import Column from './ListColumns/Column/Column';
 import ListColumns from './ListColumns/ListColumns';
 import Card from './ListColumns/Column/ListCards/Card/Card';
+import { generatePlaceholderCard } from '~/utils/formatters';
 
-import { cloneDeep } from 'lodash';
+import Box from '@mui/material/Box';
+import { cloneDeep, isEmpty } from 'lodash';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   DndContext,
@@ -18,7 +20,6 @@ import {
   defaultDropAnimationSideEffects,
 } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
-import Box from '@mui/material/Box';
 
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -109,6 +110,10 @@ const BoardContent = ({ board }) => {
         nextActiceColumn.cards = nextActiceColumn.cards.filter(
           (card) => card._id !== activeDraggingCardId
         );
+        // Thêm placeholdercard nếu column rỗng: bị kéo hết card đi
+        if (isEmpty(nextActiceColumn.cards)) {
+          nextActiceColumn.cards = [generatePlaceholderCard(nextActiceColumn)];
+        }
         // Cập nhật lại mảng cardOrderIds cho chuẩn dữ liệu
         nextActiceColumn.cardOrderIds = nextActiceColumn.cards.map(
           (card) => card._id
@@ -131,6 +136,10 @@ const BoardContent = ({ board }) => {
           newCardIndex,
           0,
           rebuild_activeDraggingCardData
+        );
+        // Xóa đi placeholderCard khi nó đang tồn tại card
+        nextOverColumn.cards = nextOverColumn.cards.filter(
+          (card) => !card.FE_PlaceholderCard
         );
         // Cập nhật lại mảng cardOrderIds cho chuẩn dữ liệu
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(
