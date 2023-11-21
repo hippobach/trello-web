@@ -13,9 +13,7 @@ import {
   useSensor,
   useSensors,
   pointerWithin,
-  closestCenter,
   closestCorners,
-  rectIntersection,
   getFirstCollision,
   defaultDropAnimationSideEffects,
 } from '@dnd-kit/core';
@@ -319,23 +317,27 @@ const BoardContent = ({ board }) => {
       }
       // Tìm các điểm giao nhau, va chạm với con trỏ
       const pointerIntersections = pointerWithin(args);
+      // Nếu pointerIntersections là mảng rỗng, return luôn và không làm gì hết
+      // Fix bug flickering của thư viện dnd-kit trong trường hợp:
+      // kéo một cái card có image cover lớn và kéo lên phía trên column (ra khỏi khu vực kéo thả)
+      if (!pointerIntersections?.length) return;
       // Thuật toán phát hiện va chạm và trả về các mảng va chạm tại đây
-      const intersections =
-        pointerIntersections?.length > 0
-          ? pointerIntersections
-          : rectIntersection(args);
+      // const intersections =
+      //   pointerIntersections?.length > 0
+      //     ? pointerIntersections
+      //     : rectIntersection(args);
 
-      // Tìm overId đàu tiên trong intersection
-      let overId = getFirstCollision(intersections, 'id');
+      // Tìm overId đàu tiên trong pointerIntersections
+      let overId = getFirstCollision(pointerIntersections, 'id');
       if (overId) {
         // Nếu cái over nó là column thì sẽ tìm tới cardId gần nhất bên trong khu vực
         // va chạm đó dựa vào thuật toán phát hiện va chạm closestCenter hoặc closestCorners
-        // đều được. Tuy nhiên ở đây dùng cloestCenter sẽ mượt hơn
+        // đều được. Tuy nhiên ở đây dùng closestCorners sẽ mượt hơn
         const checkColumn = orderedColumns.find(
           (column) => column._id === overId
         );
         if (checkColumn) {
-          overId = closestCenter({
+          overId = closestCorners({
             ...args,
             droppableContainers: args.droppableContainers.filter(
               (container) => {
