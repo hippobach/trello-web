@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 import Box from '@mui/material/Box';
 import Column from './Column/Column';
@@ -21,6 +22,7 @@ const ListColumns = ({ columns }) => {
   const [newColumnTitle, setNewColumnTitle] = useState('');
   const addNewColumn = () => {
     if (!newColumnTitle) {
+      toast.error('Please enter the column title');
       return;
     }
     // Gọi API ở đây ...
