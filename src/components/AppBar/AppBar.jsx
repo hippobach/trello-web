@@ -45,7 +45,7 @@ const AppBar = () => {
         <AppsIcon sx={{ color: 'white' }} />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           <SvgIcon
-            sx={{ color: 'white' }} 
+            sx={{ color: 'white' }}
             component={TrelloIcon}
             inheritViewBox
             fontSize="small"
@@ -94,14 +94,16 @@ const AppBar = () => {
               </InputAdornment>
             ),
             endAdornment: (
-              <CloseIcon
-                fontSize="small"
-                sx={{
-                  color: searchValue ? 'white' : 'transparent',
-                  cursor: 'pointer',
-                }}
-                onClick={() => setSearchValue('')}
-              />
+              <InputAdornment position="end">
+                <CloseIcon
+                  fontSize="small"
+                  sx={{
+                    color: searchValue ? 'white' : 'transparent',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => setSearchValue('')}
+                />
+              </InputAdornment>
             ),
           }}
           sx={{
