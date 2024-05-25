@@ -2,6 +2,7 @@ import { mapOrder } from '~/utils/sorts';
 import ListCards from './ListCards/ListCards';
 
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import { CSS } from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 
@@ -44,6 +45,9 @@ const Column = ({ column }) => {
   const [newCardTitle, setNewCardTitle] = useState('');
   const addNewCard = () => {
     if (!newCardTitle) {
+      toast.error('Please enter the card title', {
+        position: 'bottom-right',
+      });
       return;
     }
     // Gọi API ở đây ...
