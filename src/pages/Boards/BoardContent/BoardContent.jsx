@@ -10,8 +10,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   DndContext,
   DragOverlay,
-  MouseSensor,
-  TouchSensor,
   useSensor,
   useSensors,
   pointerWithin,
@@ -19,6 +17,7 @@ import {
   getFirstCollision,
   defaultDropAnimationSideEffects,
 } from '@dnd-kit/core';
+import { MouseSensor, TouchSensor } from '~/customLibraries/DndKitSensors';
 import { arrayMove } from '@dnd-kit/sortable';
 
 const ACTIVE_DRAG_ITEM_TYPE = {
