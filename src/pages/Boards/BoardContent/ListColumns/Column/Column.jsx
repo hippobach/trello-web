@@ -27,7 +27,7 @@ import DeleteForevericon from '@mui/icons-material/DeleteForever';
 import { TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-const Column = ({ column }) => {
+const Column = ({ column, createNewCard }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -43,7 +43,7 @@ const Column = ({ column }) => {
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm);
 
   const [newCardTitle, setNewCardTitle] = useState('');
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newCardTitle) {
       toast.error('Please enter the card title', {
         position: 'bottom-right',
@@ -51,6 +51,12 @@ const Column = ({ column }) => {
       return;
     }
     // Gọi API ở đây ...
+    const newCardData = {
+      title: newCardTitle,
+      columnId: column._id,
+    };
+
+    await createNewCard(newCardData);
 
     // Đóng trạng thái thêm Column mới & Clear input
     toggleOpenNewCardForm();

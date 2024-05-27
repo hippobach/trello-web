@@ -14,18 +14,23 @@ import CloseIcon from '@mui/icons-material/Close';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 // import theme from '~/theme';
 
-const ListColumns = ({ columns }) => {
+const ListColumns = ({ columns, createNewColumn, createNewCard }) => {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false);
   const toggleOpenNewColumnForm = () =>
     setOpenNewColumnForm(!openNewColumnForm);
 
   const [newColumnTitle, setNewColumnTitle] = useState('');
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter the column title');
       return;
     }
-    // Gọi API ở đây ...
+    // Tạo dữ liệu Column để gọi api
+    const newColumnData = {
+      title: newColumnTitle,
+    };
+
+    await createNewColumn(newColumnData);
 
     // Đóng trạng thái thêm Column mới & Clear input
     toggleOpenNewColumnForm();
@@ -51,7 +56,13 @@ const ListColumns = ({ columns }) => {
         }}
       >
         {columns?.map((column) => {
-          return <Column key={column._id} column={column} />;
+          return (
+            <Column
+              key={column._id}
+              column={column}
+              createNewCard={createNewCard}
+            />
+          );
         })}
 
         {!openNewColumnForm ? (
