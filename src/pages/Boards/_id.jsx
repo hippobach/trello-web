@@ -8,6 +8,7 @@ import BoardBar from './BoardBar/BoardBar';
 import BoardContent from './BoardContent/BoardContent';
 import {
   fetchBoardDetailsAPI,
+  updateBoardDetailsAPI,
   createNewColumnAPI,
   createNewCardAPI,
 } from '~/apis';
@@ -68,6 +69,21 @@ const Board = () => {
     setBoard(newBoard);
   };
 
+  // Hàm này có nhiệm vụ gọi api và xử lý khi kéo thả xong xuôi
+  const moveColumns = async (dndOrderedColumns) => {
+    // Cập nhật state board
+    const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
+    const newBoard = { ...board };
+    newBoard.columns = dndOrderedColumns;
+    newBoard.columnOrderIds = dndOrderedColumnsIds;
+    setBoard(newBoard);
+
+    // Gọi api update board
+    await updateBoardDetailsAPI(newBoard._id, {
+      columnOrderIds: newBoard.columnOrderIds,
+    });
+  };
+
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
       <AppBar />
@@ -76,6 +92,7 @@ const Board = () => {
         board={board}
         createNewColumn={createNewColumn}
         createNewCard={createNewCard}
+        moveColumns={moveColumns}
       />
     </Container>
   );
