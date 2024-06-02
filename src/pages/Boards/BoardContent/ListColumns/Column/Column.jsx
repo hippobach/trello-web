@@ -1,4 +1,3 @@
-import { mapOrder } from '~/utils/sorts';
 import ListCards from './ListCards/ListCards';
 
 import { useState } from 'react';
@@ -15,7 +14,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 
+import { TextField } from '@mui/material';
 import Cloud from '@mui/icons-material/Cloud';
+import CloseIcon from '@mui/icons-material/Close';
 import AddCardIcon from '@mui/icons-material/AddCard';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ContentCut from '@mui/icons-material/ContentCut';
@@ -24,8 +25,6 @@ import ContentPaste from '@mui/icons-material/ContentPaste';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import DeleteForevericon from '@mui/icons-material/DeleteForever';
-import { TextField } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 
 const Column = ({ column, createNewCard }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -37,13 +36,14 @@ const Column = ({ column, createNewCard }) => {
     setAnchorEl(null);
   };
 
-  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id');
+  // Card đã được sắp xếp ở component cha cao nhất là board/_id.jsx
+  const orderedCards = column.cards;
 
   const [openNewCardForm, setOpenNewCardForm] = useState(false);
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm);
 
   const [newCardTitle, setNewCardTitle] = useState('');
-  const addNewCard = async () => {
+  const addNewCard = () => {
     if (!newCardTitle) {
       toast.error('Please enter the card title', {
         position: 'bottom-right',
@@ -56,7 +56,7 @@ const Column = ({ column, createNewCard }) => {
       columnId: column._id,
     };
 
-    await createNewCard(newCardData);
+    createNewCard(newCardData);
 
     // Đóng trạng thái thêm Column mới & Clear input
     toggleOpenNewCardForm();
