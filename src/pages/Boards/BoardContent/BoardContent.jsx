@@ -29,6 +29,7 @@ const BoardContent = ({
   createNewColumn,
   createNewCard,
   moveColumns,
+  deleteColumnDetails,
   moveCardInTheSameColumn,
   moveCardToDifferentColumn,
 }) => {
@@ -423,6 +424,7 @@ const BoardContent = ({
           columns={orderedColumns}
           createNewColumn={createNewColumn}
           createNewCard={createNewCard}
+          deleteColumnDetails={deleteColumnDetails}
         />
         <DragOverlay dropAnimation={customsDropAnimation}>
           {!activeDragItemType && null}

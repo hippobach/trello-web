@@ -1,4 +1,5 @@
 import { isEmpty } from 'lodash';
+import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 
 import Container from '@mui/material/Container';
@@ -9,11 +10,12 @@ import BoardBar from './BoardBar/BoardBar';
 import BoardContent from './BoardContent/BoardContent';
 
 import {
+  createNewCardAPI,
+  createNewColumnAPI,
   fetchBoardDetailsAPI,
   updateBoardDetailsAPI,
   updateColumnDetailsAPI,
-  createNewColumnAPI,
-  createNewCardAPI,
+  deleteColumnDetailsAPI,
   moveCardToDifferentColumnAPI,
 } from '~/apis';
 
@@ -163,6 +165,21 @@ const Board = () => {
     });
   };
 
+  // Xử lý xóa một column và card
+  const deleteColumnDetails = (columnId) => {
+    // Update dữ liệu state board
+    const newBoard = { ...board };
+    newBoard.columns = newBoard.columns.filter((c) => c._id !== columnId);
+    newBoard.columnOrderIds = newBoard.columnOrderIds.filter(
+      (_id) => _id !== columnId
+    );
+    setBoard(newBoard);
+    // Gọi API
+    deleteColumnDetailsAPI(columnId).then((res) => {
+      toast.success(res?.deleteResult);
+    });
+  };
+
   if (!board) {
     return (
       <Box
@@ -192,6 +209,7 @@ const Board = () => {
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
         moveCardToDifferentColumn={moveCardToDifferentColumn}
+        deleteColumnDetails={deleteColumnDetails}
       />
     </Container>
   );
