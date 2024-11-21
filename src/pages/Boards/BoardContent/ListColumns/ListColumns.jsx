@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { cloneDeep } from 'lodash';
 import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Column from './Column/Column';
@@ -13,19 +15,22 @@ import { TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 // import theme from '~/theme';
+import { createNewColumnAPI } from '~/apis';
+import { generatePlaceholderCard } from '~/utils/formatters';
+import {
+  updateCurrentActiveBoard,
+  selectCurrentActiveBoard,
+} from '~/redux/activeBoard/activeBoardSlice';
 
-const ListColumns = ({
-  columns,
-  createNewColumn,
-  createNewCard,
-  deleteColumnDetails,
-}) => {
+const ListColumns = ({ columns }) => {
+  const dispatch = useDispatch();
+  const board = useSelector(selectCurrentActiveBoard);
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false);
   const toggleOpenNewColumnForm = () =>
     setOpenNewColumnForm(!openNewColumnForm);
 
   const [newColumnTitle, setNewColumnTitle] = useState('');
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter the column title');
       return;
@@ -35,7 +40,31 @@ const ListColumns = ({
       title: newColumnTitle,
     };
 
-    createNewColumn(newColumnData);
+    // gọi api tạo mới column và làm lại dữ liệu State Board
+    const createdColumn = await createNewColumnAPI({
+      ...newColumnData,
+      boardId: board._id,
+    });
+
+    // Khi tạo column mới thì nó sẽ chưa có card, cần xử lý vấn đề kéo thả vào một column rỗng
+    createdColumn.cards = [generatePlaceholderCard(createdColumn)];
+    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id];
+
+    // Cập nhật state board
+    // SpreadOperator đang là Shallow Copy -> Phải sử dụng Deep Copy trong redux
+    // Nếu dùng Spread Operator sẽ bị lỗi Object is not extensible -> lỗi rules Imutability trong Redux Toolkit
+    const newBoard = cloneDeep(board);
+    newBoard.columns.push(createdColumn);
+    newBoard.columnOrderIds.push(createdColumn._id);
+    dispatch(updateCurrentActiveBoard(newBoard));
+
+    // Có thể dùng array.concat() thay cho push() như trong docs của Redux Toolkit vì push sẽ thay đổi mảng trực tiếp, còn concat thì sẽ merge - ghép mảng lại và tạo ra một mảng mới để gán lại giá trị
+    // const newBoard = { ...board };
+    // newBoard.columns = newBoard.columns.concat([createdColumn]);
+    // newBoard.columnOrderIds = newBoard.columnOrderIds.concat([
+    //   createdColumn._id,
+    // ]);
+    // dispatch(updateCurrentActiveBoard(newBoard));
 
     // Đóng trạng thái thêm Column mới & Clear input
     toggleOpenNewColumnForm();
@@ -61,14 +90,7 @@ const ListColumns = ({
         }}
       >
         {columns?.map((column) => {
-          return (
-            <Column
-              key={column._id}
-              column={column}
-              createNewCard={createNewCard}
-              deleteColumnDetails={deleteColumnDetails}
-            />
-          );
+          return <Column key={column._id} column={column} />;
         })}
 
         {!openNewColumnForm ? (
