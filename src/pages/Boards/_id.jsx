@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { cloneDeep } from 'lodash';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Container from '@mui/material/Container';
@@ -23,13 +24,12 @@ import {
 
 const Board = () => {
   const dispatch = useDispatch();
+  const { boardId } = useParams();
   const board = useSelector(selectCurrentActiveBoard);
 
   useEffect(() => {
-    const boardId = '66520fe4add70c243359d450';
-    // Call API
     dispatch(fetchBoardDetailsAPI(boardId));
-  }, [dispatch]);
+  }, [dispatch, boardId]);
 
   // Hàm này có nhiệm vụ gọi api và xử lý khi kéo thả xong xuôi
   const moveColumns = (dndOrderedColumns) => {
