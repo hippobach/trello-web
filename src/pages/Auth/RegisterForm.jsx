@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Zoom from '@mui/material/Zoom';
@@ -19,17 +20,28 @@ import {
   PASSWORD_RULE_MESSAGE,
   PASSWORD_CONFIRMATION_MESSAGE,
 } from '~/utils/validators';
+import { registerUserAPI } from '~/apis';
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert';
 import { ReactComponent as TrelloIcon } from '~/assets/trello.svg';
 
-function RegisterForm() {
+const RegisterForm = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
   } = useForm();
-  const submitRegister = (data) => {};
+  const submitRegister = (data) => {
+    const { email, password } = data;
+    toast
+      .promise(registerUserAPI({ email, password }), {
+        pending: 'Registration is in progress',
+      })
+      .then((user) => {
+        navigate(`/login?registeredEmail=${user.email}`);
+      });
+  };
 
   return (
     <form onSubmit={handleSubmit(submitRegister)}>
@@ -143,6 +155,6 @@ function RegisterForm() {
       </Zoom>
     </form>
   );
-}
+};
 
 export default RegisterForm;

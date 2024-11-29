@@ -4,11 +4,11 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Container from '@mui/material/Container';
-import { Box, CircularProgress, Typography } from '@mui/material';
 
 import AppBar from '~/components/AppBar/AppBar';
 import BoardBar from './BoardBar/BoardBar';
 import BoardContent from './BoardContent/BoardContent';
+import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner';
 
 import {
   fetchBoardDetailsAPI,
@@ -109,21 +109,7 @@ const Board = () => {
   };
 
   if (!board) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 2,
-          width: '100vw',
-          height: '100vh',
-        }}
-      >
-        <CircularProgress />
-        <Typography>Loading</Typography>
-      </Box>
-    );
+    return <PageLoadingSpinner caption="Loading" />;
   }
 
   return (
