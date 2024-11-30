@@ -1,5 +1,7 @@
+import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Zoom from '@mui/material/Zoom';
@@ -12,8 +14,6 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import CardActions from '@mui/material/CardActions';
 
-import { ReactComponent as TrelloIcon } from '~/assets/trello.svg';
-
 import {
   FIELD_REQUIRED_MESSAGE,
   EMAIL_RULE,
@@ -21,9 +21,13 @@ import {
   PASSWORD_RULE,
   PASSWORD_RULE_MESSAGE,
 } from '~/utils/validators';
+import { loginUserAPI } from '~/redux/user/userSlice';
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert';
+import { ReactComponent as TrelloIcon } from '~/assets/trello.svg';
 
 const LoginForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -33,7 +37,18 @@ const LoginForm = () => {
   const registeredEmail = searchParams.get('registeredEmail');
   const verifiedEmail = searchParams.get('verifiedEmail');
 
-  const submitLogIn = (data) => {};
+  const submitLogIn = (data) => {
+    const { email, password } = data;
+    toast
+      .promise(dispatch(loginUserAPI({ email, password })), {
+        pending: 'You are logging in our service',
+      })
+      .then((res) => {
+        if (!res.error) {
+          navigate('/');
+        }
+      });
+  };
 
   return (
     <form onSubmit={handleSubmit(submitLogIn)}>
